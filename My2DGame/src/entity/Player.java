@@ -25,8 +25,8 @@ public class Player extends Entity {
 	}
 	
 	public void setDefaultValues() {
-		x=100;
-		y=100;
+		worldX=100;
+		worldY=100;
 		speed = 4;
 		direction = "down";
 	}
@@ -51,18 +51,18 @@ public class Player extends Entity {
 	public void update() {
 		if (keyH.upPressed == true) {
 			direction = "up";
-			y -= speed;
+			worldY -= speed;
 		} else if (keyH.downPressed == true) {
 			direction = "down";
-			y += speed;
+			worldY += speed;
 		} 
 		
 		if (keyH.leftPressed == true) {
 			direction = "left";
-			x -= speed;
+			worldX -= speed;
 		} else if (keyH.rightPressed == true) {
 			direction = "right";
-			x += speed;
+			worldX += speed;
 		}
 		
 		if (keyH.keyPressed) {
