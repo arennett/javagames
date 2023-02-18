@@ -131,7 +131,29 @@ public class GameLogic {
 		}
 		return false;
 	}
-	
+	private boolean compute_optimized_prevent_player_win(int comp, int opponent) {
+		GamePanel gp = GamePanel.getInstance();
+		// find empty cells
+
+		// find if win is possible
+		// find if win is possible
+		Vector<Cell> vEmptyCells = getEmptyCells();
+		if (!vEmptyCells.isEmpty()) {
+			for (Cell p:vEmptyCells) {
+				cellArr[p.row][p.col] = opponent;
+				// test if winner
+				if(getWinner() == opponent) {
+					cellArr[p.row][p.col] = comp;
+					gp.repaint();
+					return true;
+				} else {
+				// reset to empty	
+					cellArr[p.row][p.col] = CELL_TYPE_EMPTY;
+				}
+			}
+		}
+		return false;
+	}
 	public boolean isGameOver() {
 		
 		return getEmptyCells().isEmpty() || getWinner() > 0;
@@ -199,28 +221,7 @@ public class GameLogic {
 		
 	}
 	
-	private boolean compute_optimized_prevent_player_win() {
-		GamePanel gp = GamePanel.getInstance();
-		// find empty cells
-
-		// find if win is possible
-		// find if win is possible
-		Vector<Cell> vEmptyCells = getEmptyCells();
-		if (!vEmptyCells.isEmpty()) {
-			for (Cell p:vEmptyCells) {
-				cellArr[p.row][p.col] = CELL_TYPE_COMP1;
-				// test if winner
-				if(getWinner() == CELL_TYPE_COMP1) {
-					gp.repaint();
-					return true;
-				} else {
-				// reset to empty	
-					cellArr[p.row][p.col] = CELL_TYPE_EMPTY;
-				}
-			}
-		}
-		return false;
-	}
+	
 	
 	
 	public int getWinner() {
