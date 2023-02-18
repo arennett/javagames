@@ -38,7 +38,7 @@ public class GamePanel extends JPanel  {
 	public static final int CELL_TYPE_EMPTY = 0;
 	public static final int CELL_TYPE_PLAYER 	= 10;
 	public static final int CELL_TYPE_COMP1 	= 1;
-	public static final int CELL_TYPE_COMP2 	= 2;
+	public static final int CELL_TYPE_COMP2 	= 2; 
 	
 
 	
