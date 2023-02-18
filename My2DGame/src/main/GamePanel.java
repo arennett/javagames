@@ -16,6 +16,7 @@ public class GamePanel extends JPanel implements Runnable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	// SCREEN SETTINGS
 	final int originalTileSize = 16; // 16x16 tile
 	final int scale = 3;
@@ -26,13 +27,29 @@ public class GamePanel extends JPanel implements Runnable {
 	public final int screenWidth = tileSize * maxScreenCol; // 768 pixels
 	public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
 
+	//WORLD SETTINGS
+	public final int maxWorldCol  = 50;
+	public final int maxWorldRow  = 50;
+	public final int worldWidth   = tileSize * maxWorldCol;
+	public final int worldHeight  = tileSize * maxWorldRow;
+	
+	
+	
+	
+	
 	// FPS
 	int FPS = 60;
 
+	
+	
+	
+	
 	TileManager tileManager = new TileManager(this);
 	KeyHandler keyH = new KeyHandler();
 	Thread gameThread;
-	Player player = new Player(this,keyH);
+	public CollisionChecker  collChecker = new CollisionChecker(this);
+	
+	public Player player = new Player(this,keyH);
 	
 
 	// Set player´s default position
