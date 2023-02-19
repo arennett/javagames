@@ -64,7 +64,7 @@ static private GameController instance;
 		if (gl.isGameOver()) { //GameOver
 			int winner = gl.getWinner();
 			String winnerStr = "nobody wins";
-			if (winner < CELL_TYPE_PLAYER) {
+			if ((winner > CELL_TYPE_EMPTY) && (winner < CELL_TYPE_PLAYER)) {
 				winnerStr = "computer wins";
 			} else if (winner == CELL_TYPE_PLAYER) {
 				winnerStr = "you win";

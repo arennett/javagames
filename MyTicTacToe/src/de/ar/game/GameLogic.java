@@ -75,6 +75,11 @@ public class GameLogic {
 			return true;
 		}
 		
+		if (compute_optimized_prevent_player_win(CELL_TYPE_COMP1,CELL_TYPE_PLAYER)) {
+			return true;
+		}
+
+		
 		return compute_random(CELL_TYPE_COMP1);
 	}
 	
@@ -86,6 +91,10 @@ public class GameLogic {
 	public boolean compute_comp2() {
 		
 		if (compute_optimized_try_win(CELL_TYPE_COMP2)) {
+			return true;
+		}
+		
+		if (compute_optimized_prevent_player_win(CELL_TYPE_COMP2,CELL_TYPE_COMP1)) {
 			return true;
 		}
 		
@@ -160,7 +169,7 @@ public class GameLogic {
 	}
 	
 	public void simulate () {
-		int max_trials = 100;
+		int max_trials = 1000;
 		TicTacToe.getInstance().labelDrawn.setText("");;
 		TicTacToe.getInstance().labelComp1.setText("");;
 		TicTacToe.getInstance().labelComp2.setText("");;
@@ -197,7 +206,7 @@ public class GameLogic {
 					}
 					GamePanel.getInstance().repaint();
 					try {
-						Thread.sleep(100);;
+						Thread.sleep(1);;
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -206,10 +215,6 @@ public class GameLogic {
 				}
 				
 			}
-			
-			
-			
-			
 		}
 		
 		TicTacToe.getInstance().labelDrawn.setText("drawn: "+scoreDrawn);;
