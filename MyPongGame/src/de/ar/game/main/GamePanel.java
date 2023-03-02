@@ -8,6 +8,7 @@ import java.awt.RenderingHints;
 import javax.swing.JPanel;
 
 import de.ar.game.entity.Ball;
+import de.ar.game.entity.Player;
 import de.ar.game.tiles.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -21,16 +22,45 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	 Thread gameThread;
 	 TileManager tileManager;
+	 CollisionDetection collisionDetection;
+	 ScoreControl scoreControl;
+	 
 	 Ball ball = new Ball(this);
 	 
-	 public TileManager getTileManager() {
+	 Player rightPlayer = new Player(Player.PLAYER_RIGHT,this);
+	 Player leftPlayer  = new Player(Player.PLAYER_LEFT,this);
+	 
+	 public Player getLeftPlayer() {
+		return leftPlayer;
+	}
+
+	public Player getRightPlayer() {
+		return rightPlayer;
+	}
+
+	KeyHandler keyHandler = new KeyHandler();
+	 
+	 public KeyHandler getKeyHandler() {
+		return keyHandler;
+	}
+
+	public TileManager getTileManager() {
 		return tileManager;
 	}
 
 	public GamePanel () {
+		 addKeyListener(keyHandler);
 		 tileManager = new TileManager();
+		 collisionDetection = new CollisionDetection(this);
+		 scoreControl = new ScoreControl(this);
 		 setPreferredSize(new Dimension (BOARD_WIDTH,BOARD_HEIGHT));
+		 this.setFocusable(true);
+         this.requestFocusInWindow();	
 	 }
+
+	public CollisionDetection getCollisionDetection() {
+		return collisionDetection;
+	}
 
 	/**
 	 * 
@@ -50,8 +80,10 @@ public class GamePanel extends JPanel implements Runnable {
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		tileManager.drawTiles(g2);
 		ball.draw(g2);
-//		drawBall();
-//		drawPlayer();
+		leftPlayer.draw(g2);
+		rightPlayer.draw(g2);
+		scoreControl.draw(g2);
+		
 	}
 
 
@@ -99,5 +131,11 @@ public class GamePanel extends JPanel implements Runnable {
 
 	private void update() {
 		ball.move();
+		leftPlayer.move();
+		rightPlayer.move();
+	}
+
+	public Ball getBall() {
+		return ball;
 	}
 }

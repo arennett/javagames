@@ -1,82 +1,151 @@
 package de.ar.game.entity;
-import static de.ar.game.main.GamePanel.*;
 
-import java.awt.Graphics;
+import static de.ar.game.main.GamePanel.*;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 
+import de.ar.game.main.CollisionDetection;
+import de.ar.game.main.CollisionDetection.tCollPos;
 import de.ar.game.main.GamePanel;
-import de.ar.game.tiles.Tile;
+
 //import de.ar.game.tiles.TileManager.Tile;
 
-public class Ball extends Entity{
+public class Ball extends Entity {
 	int dx;
 	int dy;
+	Dimension dim;
+	Rectangle rec;
 	private GamePanel gp;
+
 	public Ball(GamePanel gp) {
 		this.gp = gp;
-		pos = new Point (BOARD_WIDTH /2,BOARD_HEIGHT/2);
-		speed =1;
+		pos = new Point(BOARD_WIDTH / 2, BOARD_HEIGHT / 2);
+		speed = 4;
+		dim = new Dimension(TILE_SIZE, TILE_SIZE);
+		rec = new Rectangle(pos, dim);
 		dx = speed;
 		dy = speed;
 	}
-	
+
 	public void move() {
-		// get upper Tile 
+		// get upper Tile
 		Point newPos = new Point();
-		Point newPos2= new Point();
-		newPos.x+=pos.x+dx;
-		newPos.y+=pos.y+dy;
-		newPos2.x+=pos.x+dx+TILE_SIZE;
-		newPos2.y+=pos.y+dy+TILE_SIZE;
+		newPos.x += pos.x + dx;
+		newPos.y += pos.y + dy;
+		Rectangle newrec = new Rectangle(newPos, dim);
+		CollisionDetection colldetect = gp.getCollisionDetection();
+		//goal at newpos ?
 		
-		
-//		if (newPos.x <0) {
-//			dx = -dx;
-//		}
-//		if (newPos.x + TILE_SIZE > BOARD_WIDTH) {
-//			dx = -dx;
-//		}
-//		if (newPos.y <0) {
-//			dy = -dy;
-//		}
-//		if (newPos.y +TILE_SIZE> BOARD_HEIGHT) {
-//			dy = -dy;
-//		}
-		
-		Tile tile1 = gp.getTileManager().getTile(newPos);
-		Tile tile2 = gp.getTileManager().getTile(newPos2);
-		Tile tile=null;
-		if (tile1.getType() == Tile.TILE_TYPE_WALL) {
-			tile=tile1;
-		}else if (tile2.getType() == Tile.TILE_TYPE_WALL) {
-			tile=tile2;
+		int player = colldetect.getGoalDetection(newrec);
+		if (player==Player.PLAYER_LEFT) {
+			pos.x = 200;
+			dx = speed;
+			pos.y =BOARD_HEIGHT/2;
 		}
-		if (tile!=null) {
-			if (tile.getCol() ==0) {
-				dx = -dx;
+		if (player==Player.PLAYER_RIGHT) {
+			pos.x = BOARD_WIDTH-200;
+			dx = -speed;
+			pos.y =BOARD_HEIGHT/2;
+		}
+				
+		
+		//collisions
+		tCollPos collPos = null;
+
+		if (collPos == null) {
+			collPos = colldetect.getTileCollPos(newrec);
+			if (collPos != null) {
+				switch (collPos) {
+				case COLL_UPPER_LEFT:
+					dx = -dx;
+					dy = -dy;
+					break;
+				case COLL_UPPER:
+					dy = -dy;
+					break;
+				case COLL_UPPER_RIGHT:
+					dx = -dx;
+					dy = -dy;
+					break;
+				case COLL_RIGHT:
+					dx = -dx;
+					break;
+				case COLL_LOWER_RIGHT:
+					dx = -dx;
+					dy = -dy;
+					break;
+				case COLL_LOWER:
+					dy = -dy;
+					break;
+				case COLL_LOWER_LEFT:
+					dx = -dx;
+					dy = -dy;
+					break;
+				case COLL_LEFT:
+					dx = -dx;
+					break;
+				}
 			}
-			if (tile.getCol() ==TILE_COLS-1) {
-				dx = -dx;
-			}
-			if (tile.getRow() ==0) {
-				dy = -dy;
-			}
-			if (tile.getRow() ==TILE_ROWS-1) {
-				dy = -dy;
+		}
+		if (collPos == null) {
+			collPos = colldetect.getBallPlayerCollPos(newrec, gp.getLeftPlayer().getRectangle());
+			if (collPos == null) {
+				collPos = colldetect.getBallPlayerCollPos(newrec, gp.getRightPlayer().getRectangle());
 			}
 			
-			
+			if (collPos != null) {
+				switch (collPos) {
+				case COLL_UPPER_LEFT:
+					dx = -dx;
+					dy = -dy;
+					break;
+				case COLL_UPPER:
+					dx = -dx;
+					dy = -dy;
+					break;
+				case COLL_UPPER_RIGHT:
+					dx = -dx;
+					dy = -dy;
+					break;
+				case COLL_RIGHT:
+					dx = -dx;
+					break;
+				case COLL_LOWER_RIGHT:
+					dx = -dx;
+					dy = -dy;
+					break;
+				case COLL_LOWER:
+					dx = -dx;
+					dy = -dy;
+					break;
+				case COLL_LOWER_LEFT:
+					dx = -dx;
+					dy = -dy;
+					break;
+				case COLL_LEFT:
+					dx = -dx;
+					break;
+				}
+			}
 		}
 		
-		pos.x+=dx;
-		pos.y+=dy;
 		
+		pos.x += 3*dx/2;
+		pos.y += dy;
+		rec.setLocation(pos);
+
 	}
+
 	
+	public Rectangle getRec() {
+		return rec;
+	}
+
 	public void draw(Graphics2D g2) {
-		
-		g2.fillOval(pos.x,pos.y,TILE_SIZE, TILE_SIZE);
+
+		g2.fillOval(pos.x, pos.y, TILE_SIZE, TILE_SIZE);
 	}
-	
+
 }

@@ -54,6 +54,10 @@ public class Tile {
 	public Rectangle getRect() {
 		return rect;
 	}
+
+	public boolean isSolid() {
+		return getType()==TILE_TYPE_WALL;
+	}
 	
 	
 	
