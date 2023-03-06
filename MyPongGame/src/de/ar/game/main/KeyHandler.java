@@ -11,9 +11,11 @@ public class KeyHandler implements KeyListener {
 	boolean isKeyPressed_S_DOWN   = false;
 	boolean isKeyPressed_A_LEFT   = false;
 	boolean isKeyPressed_D_RIGHT  = false;
+	private GamePanel gp;
 	
 	
-	public KeyHandler() {
+	public KeyHandler(GamePanel gp) {
+		this.gp = gp;
 		
 	}
 
@@ -25,6 +27,11 @@ public class KeyHandler implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		switch(e.getKeyCode()) {
+		
+		case KeyEvent.VK_P:
+			gp.getGameControl().openDialog();
+		break;
+		
 		
 		case KeyEvent.VK_UP:
 			this.isKeyPressed_UP=true;

@@ -40,11 +40,13 @@ public class Ball extends Entity {
 		
 		int player = colldetect.getGoalDetection(newrec);
 		if (player==Player.PLAYER_LEFT) {
+			gp.getScoreControl().score(Player.PLAYER_LEFT);
 			pos.x = 200;
 			dx = speed;
 			pos.y =BOARD_HEIGHT/2;
 		}
 		if (player==Player.PLAYER_RIGHT) {
+			gp.getScoreControl().score(Player.PLAYER_RIGHT);
 			pos.x = BOARD_WIDTH-200;
 			dx = -speed;
 			pos.y =BOARD_HEIGHT/2;
