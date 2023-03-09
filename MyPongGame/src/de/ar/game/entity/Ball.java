@@ -41,17 +41,19 @@ public class Ball extends Entity {
 		int player = colldetect.getGoalDetection(newrec);
 		if (player==Player.PLAYER_LEFT) {
 			gp.getScoreControl().score(Player.PLAYER_LEFT);
-			pos.x = 200;
 			dx = speed;
-			pos.y =BOARD_HEIGHT/2;
+			pos.x = gp.getLeftPlayer().pos.x+2*gp.getLeftPlayer().dim.width;;
+			pos.y = gp.getLeftPlayer().pos.y;
+			
 		}
 		if (player==Player.PLAYER_RIGHT) {
 			gp.getScoreControl().score(Player.PLAYER_RIGHT);
-			pos.x = BOARD_WIDTH-200;
 			dx = -speed;
-			pos.y =BOARD_HEIGHT/2;
+			Point p=gp.getRightPlayer().pos;
+			pos.x = gp.getRightPlayer().pos.x-2*gp.getRightPlayer().dim.width;
+			pos.y = gp.getRightPlayer().pos.y;
 		}
-				
+				  
 		
 		//collisions
 		tCollPos collPos = null;
@@ -143,6 +145,17 @@ public class Ball extends Entity {
 	
 	public Rectangle getRec() {
 		return rec;
+	}
+
+	
+	public void setStartPos() {
+		pos.x=BOARD_WIDTH /2 -dim.width/2;
+		pos.y=BOARD_HEIGHT/2 -dim.height/2;
+		
+	}
+	
+	public Dimension getDim() {
+		return dim;
 	}
 
 	public void draw(Graphics2D g2) {

@@ -1,6 +1,8 @@
 package de.ar.game.main;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -8,6 +10,9 @@ import java.awt.RenderingHints;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import de.ar.game.countdown.CountDown;
+import de.ar.game.countdown.CountDownListener;
+import de.ar.game.countdown.CountDownManager;
 import de.ar.game.entity.Ball;
 import de.ar.game.entity.Player;
 import de.ar.game.tiles.TileManager;
@@ -19,7 +24,7 @@ import de.ar.game.tiles.TileManager;
  * @author arenn
  *
  */
-public class GamePanel extends JPanel {
+public class GamePanel extends JPanel implements CountDownListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -32,7 +37,7 @@ public class GamePanel extends JPanel {
 	private TileManager tileManager;
 	private CollisionDetection collisionDetection;
 	private ScoreControl scoreControl;
-	private CountDownControl countDownControl;
+	private CountDownManager countDownManager;
 	private GameControl gameControl;
 	private KeyHandler keyHandler;
 
@@ -42,6 +47,9 @@ public class GamePanel extends JPanel {
 	private Ball ball;
 	private Player rightPlayer;
 	private Player leftPlayer;
+	
+	private  CountDown countdown_level_start;
+	private CountDown countdown_level_expired;
 
 	public GamePanel(JFrame window) {
 		this.window = window;
@@ -50,11 +58,18 @@ public class GamePanel extends JPanel {
 		tileManager = new TileManager();
 		collisionDetection = new CollisionDetection(this);
 		scoreControl = new ScoreControl(this);
-		countDownControl = new CountDownControl(this);
+		countDownManager = new CountDownManager(this);
 		gameControl = new GameControl(this);
 		ball = new Ball(this);
 		leftPlayer = new Player(Player.PLAYER_LEFT, this);
 		rightPlayer = new Player(Player.PLAYER_RIGHT, this);
+		
+		countdown_level_start = countDownManager.getCountDown(CountDownManager.COUNTDOWN_LEVEL_START);
+		countdown_level_start.addListener(this);
+		
+		countdown_level_expired 
+		= countDownManager.getCountDown(CountDownManager.COUNTDOWN_LEVEL_EXPIRED);
+		countdown_level_expired.addListener(this);
 
 		setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
 		this.setFocusable(true);
@@ -76,11 +91,34 @@ public class GamePanel extends JPanel {
 		ball.draw(g2);
 		leftPlayer.draw(g2);
 		rightPlayer.draw(g2);
-		countDownControl.draw(g2);
 		scoreControl.draw(g2);
+		draw(g2);
 
 	}
 
+	public void draw(Graphics2D g2) {
+		// drawing level countdown
+		
+		Font font = new Font("MONOSPACED", Font.BOLD, 30);
+		g2.setFont(font);
+		String str = "Time: " + countdown_level_expired.getRemainTime() /1000;
+		g2.drawString(str, 60, 50);
+		
+		
+		// drawing level countdown
+		if (countdown_level_start.isActive()) {
+			font = new Font("MONOSPACED", Font.BOLD, 60);
+			g2.setColor(Color.RED);
+			g2.setFont(font);
+			str = "" + countdown_level_start.getRemainTime() /1000;
+			g2.drawString(str, BOARD_WIDTH/2-ball.getDim().width, BOARD_HEIGHT/2-ball.getDim().width);
+		}
+		
+			
+	}
+	
+	
+	
 	public KeyHandler getKeyHandler() {
 		return keyHandler;
 	}
@@ -117,11 +155,23 @@ public class GamePanel extends JPanel {
 		return ball;
 	}
 
-	public CountDownControl getCountDownControl() {
-		return countDownControl;
+	public CountDownManager getCountDownManager() {
+		return countDownManager;
 	}
 
-	public void setCountDownControl(CountDownControl countDownControl) {
-		this.countDownControl = countDownControl;
+	public void setCountDownControl(CountDownManager countDownControl) {
+		this.countDownManager = countDownControl;
+	}
+
+	@Override
+	public void updateCount(CountDown cd) {
+		repaint();
+		
+	}
+
+	@Override
+	public void expiredCount(CountDown cd) {
+		// TODO Auto-generated method stub
+		
 	}
 }

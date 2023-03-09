@@ -1,8 +1,9 @@
 package de.ar.game.main;
-
+import static de.ar.game.main.GameControl.*;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,44 +26,73 @@ public class OptionsDialog extends JDialog {
 		Container dialogContainer = getContentPane();
 		dialogContainer.setLayout(new BorderLayout());
 		
+		setLayout(new BorderLayout());
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new FlowLayout());
 		dialogContainer.add(centerPanel, BorderLayout.CENTER);
 		
 		JPanel buttonPanel = new JPanel();
+		
 		buttonPanel.setLayout(new BorderLayout());
-		JRadioButton player_1 = new JRadioButton("1 Player");
-		JRadioButton player_2 = new JRadioButton("2 Player");
-		buttonPanel.add(player_1,BorderLayout.NORTH);
-		buttonPanel.add(player_2,BorderLayout.SOUTH);
+		JRadioButton button_playmode_1 = new JRadioButton("1 Player");
+		JRadioButton button_playmode_2 = new JRadioButton("2 Player");
+		buttonPanel.add(button_playmode_1,BorderLayout.NORTH);
+		buttonPanel.add(button_playmode_2,BorderLayout.SOUTH);
 		
 		
 		ButtonGroup butgr = new ButtonGroup();
-		butgr.add(player_1);
-		butgr.add(player_2);
+		butgr.add(button_playmode_1);
+		butgr.add(button_playmode_2);
 		centerPanel.add(buttonPanel);
-		player_1.setSelected(true);
+		button_playmode_1.setSelected(true);
 		
-		
+			
 		JPanel southPanel = new JPanel();
 		southPanel.setLayout(new FlowLayout());
 
-		JButton okButton = new JButton("Start Game");
-		okButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gp.getGameControl().startGame();
-				setVisible(false);
-			}
-		});
+		JButton button_start = new JButton("Start Game");
+		
 
-		southPanel.add(okButton);
+		southPanel.add(button_start);
 		dialogContainer.add(southPanel, BorderLayout.SOUTH);
-
+        setPreferredSize(new Dimension(150, 150));
 		pack();
 		setLocationRelativeTo(gp.getWindow());
 		
-	}
-	
+		
+		//Actions
+		
+		ActionListener startGameActionListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gp.getGameControl().startLevelCountDown();
+				setVisible(false);
+			}
+		};
+		button_start.addActionListener(startGameActionListener);
+		
+		
+		
+		ActionListener playModeActionListener = new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JRadioButton b = (JRadioButton) e.getSource();
+				    if (b ==  button_playmode_1 ) {
+				    	if (b.isSelected()) {
+				    		gp.getGameControl().setPlayMode(PLAY_MODE_ONE_PLAYER);
+				    	}
+				    }
+				    if (b ==  button_playmode_2 ) {
+				    	if (b.isSelected()) {
+				    		gp.getGameControl().setPlayMode(PLAY_MODE_TWO_PLAYER);
+				    	}
+				    }
+				
+			}
+		};
+		button_playmode_1.addActionListener(playModeActionListener);
+		button_playmode_2.addActionListener(playModeActionListener);
+		
+	}	
 }

@@ -3,20 +3,32 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
-	boolean isKeyPressed_UP       = false;
-	boolean isKeyPressed_DOWN     = false;
-	boolean isKeyPressed_LEFT     = false;
-	boolean isKeyPressed_RIGHT    = false;
-	boolean isKeyPressed_W_UP     = false;
-	boolean isKeyPressed_S_DOWN   = false;
-	boolean isKeyPressed_A_LEFT   = false;
-	boolean isKeyPressed_D_RIGHT  = false;
+	boolean isKeyPressed_UP;
+	boolean isKeyPressed_DOWN;
+	boolean isKeyPressed_LEFT;
+	boolean isKeyPressed_RIGHT;
+	boolean isKeyPressed_W_UP;
+	boolean isKeyPressed_S_DOWN;
+	boolean isKeyPressed_A_LEFT;
+	boolean isKeyPressed_D_RIGHT;
 	private GamePanel gp;
 	
 	
 	public KeyHandler(GamePanel gp) {
 		this.gp = gp;
+		reset();
 		
+	}
+    public void reset() {
+    	isKeyPressed_UP       = false;
+    	isKeyPressed_DOWN     = false;
+    	isKeyPressed_LEFT     = false;
+    	isKeyPressed_RIGHT    = false;
+    	isKeyPressed_W_UP     = false;
+    	isKeyPressed_S_DOWN   = false;
+    	isKeyPressed_A_LEFT   = false;
+    	isKeyPressed_D_RIGHT  = false;
+
 	}
 
 	@Override

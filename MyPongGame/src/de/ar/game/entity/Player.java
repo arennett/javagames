@@ -1,5 +1,6 @@
 package de.ar.game.entity;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -7,6 +8,8 @@ import java.awt.Rectangle;
 
 import de.ar.game.main.GamePanel;
 import static de.ar.game.main.GamePanel.*;
+import static de.ar.game.main.GameControl.*;
+
 import de.ar.game.main.KeyHandler;
 import de.ar.game.tiles.TileManager;
 import de.ar.game.main.CollisionDetection;
@@ -73,12 +76,22 @@ public class Player extends Entity{
 			}
 		}
 		if (playerType == PLAYER_LEFT) {
-			if (keyH.isKeyPressed_W_UP()) {
-				dy=-speed;
-			}
-			
-			if (keyH.isKeyPressed_S_DOWN()) {
-				dy=speed;
+			if(gp.getGameControl().getPlayMode()==PLAY_MODE_TWO_PLAYER) {
+				if (keyH.isKeyPressed_W_UP()) {
+					dy=-speed;
+				}
+				
+				if (keyH.isKeyPressed_S_DOWN()) {
+					dy=speed;
+				}
+			} else if(gp.getGameControl().getPlayMode()==PLAY_MODE_ONE_PLAYER) {
+				if(gp.getBall().pos.x < BOARD_WIDTH/2 )
+					if(gp.getBall().pos.y > pos.y+dim.height/2) {
+						dy=speed*2/3;
+					}else {
+						dy=-speed*2/3;
+					}
+				
 			}
 		}
 		
@@ -106,7 +119,12 @@ public class Player extends Entity{
 	
 	
 	public void draw(Graphics2D g2) {
-		
+		g2.setColor(Color.BLACK);
+		if (playerType==PLAYER_LEFT) {
+			if(gp.getGameControl().getPlayMode()==PLAY_MODE_ONE_PLAYER) {
+				g2.setColor(Color.GREEN);
+			}
+		}
 		g2.fillRect(pos.x,pos.y,dim.width,dim.height);
 	}
 	

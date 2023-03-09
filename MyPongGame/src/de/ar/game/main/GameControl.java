@@ -1,37 +1,77 @@
 package de.ar.game.main;
 
+import static de.ar.game.countdown.CountDownManager.*;
+
 import javax.swing.JOptionPane;
+
+import de.ar.game.countdown.CountDown;
+import de.ar.game.countdown.CountDownListener;
 
 /**
  * start and stop the game and opens the OptionsDialig 
  */
-public class GameControl implements Runnable{
+public class GameControl implements Runnable, CountDownListener{
 	final int  FPS = 60;
 	final long FPERIOD_NSEC = 1000 * 1000 * 1000 / FPS; 
+	public static final int PLAY_MODE_RESERVED	 = 0;
+	public static final int PLAY_MODE_ONE_PLAYER = 1;
+	public static final int PLAY_MODE_TWO_PLAYER = 2;
 	
 	private GamePanel gp;
 	OptionsDialog optDialog ;
 	Thread gameThread;
 	private boolean gameThreadRunning =false;
+	private int playMode=PLAY_MODE_ONE_PLAYER;
+	
+	CountDown countdown_level_start;
+	CountDown countdown_level_expired;
+	
+	
 	
 	public GameControl(GamePanel gp) {
 		this.gp = gp;
 		optDialog = new OptionsDialog(gp);
-
+		
+		countdown_level_start 
+		= gp.getCountDownManager().getCountDown(COUNTDOWN_LEVEL_START);
+		countdown_level_expired
+		= gp.getCountDownManager().getCountDown(COUNTDOWN_LEVEL_EXPIRED);
+		
+		countdown_level_start.addListener(this);
+		countdown_level_expired.addListener(this);
+		
 	}
 
-	public void startGame() {
+	public void startLevelCountDown() {
 		gp.getScoreControl().resetScoring();
-		gp.getCountDownControl().startCountDown();
+		gp.getKeyHandler().reset();
+		countdown_level_start.startCountDown();
+		
+		
+	}
+	
+	public void startLevel() {
+		gp.getScoreControl().resetScoring();
+		gp.getKeyHandler().reset();
+		
+		countdown_level_expired.startCountDown();
 		startGameThread();
+		
 	}
 
 	
 	public void openDialog() {
-		stopGameThread();
+		stopLevel();
 		optDialog.setVisible(true);
 	}
 	
+	public void stopLevel() {
+		countdown_level_start.cancel();
+		countdown_level_expired.cancel();
+		stopGameThread();
+		gp.getBall().setStartPos();
+		gp.repaint();
+	}
 
 	private void startGameThread() {
 		gameThread = new Thread(this);
@@ -77,7 +117,7 @@ public class GameControl implements Runnable{
 			}
 			
 			if (period2 >= 1000*1000*1000) {
-				System.out.println("FPS:" + frames);
+				//System.out.println("FPS:" + frames);
 				period2=0;
 				frames=0;
 			}
@@ -85,11 +125,38 @@ public class GameControl implements Runnable{
 		}	
 	}
 
-	public void CountDownFinished() {
-		stopGameThread();
-		JOptionPane.showMessageDialog(null, "GameOver");
-		startGame();
+	public int getPlayMode() {
+		return playMode;
+	}
+	public void setPlayMode(int playMode) {
+		this.playMode = playMode;
 	}
 
+	
+	@Override
+	public void updateCount(CountDown cd) {
+	}
+
+	@Override
+	public void expiredCount(CountDown cd) {
+		switch(cd.getId()) {
+		case COUNTDOWN_LEVEL_EXPIRED:
+			 	stopLevel();
+				JOptionPane.showMessageDialog(gp,"Game over, try again !","MyPong V1.0" ,JOptionPane.PLAIN_MESSAGE);
+				startLevelCountDown();
+			
+			break;
+			
+		case COUNTDOWN_LEVEL_START:
+			startLevel();
+		
+			break;
+		}
+		
+		
+	}
+
+	
+	
 
 }
