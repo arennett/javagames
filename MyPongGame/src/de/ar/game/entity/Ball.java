@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import de.ar.game.main.CollisionDetection;
 import de.ar.game.main.CollisionDetection.tCollPos;
 import de.ar.game.main.GamePanel;
+import de.ar.game.sound.SoundPlayer;
 
 //import de.ar.game.tiles.TileManager.Tile;
 
@@ -61,6 +62,7 @@ public class Ball extends Entity {
 		if (collPos == null) {
 			collPos = colldetect.getTileCollPos(newrec);
 			if (collPos != null) {
+				gp.getSoundPlayer().play(SoundPlayer.CLIP_BALL_BEEP2);
 				switch (collPos) {
 				case COLL_UPPER_LEFT:
 					dx = -dx;

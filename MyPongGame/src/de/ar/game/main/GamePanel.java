@@ -6,7 +6,10 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.io.IOException;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -15,6 +18,7 @@ import de.ar.game.countdown.CountDownListener;
 import de.ar.game.countdown.CountDownManager;
 import de.ar.game.entity.Ball;
 import de.ar.game.entity.Player;
+import de.ar.game.sound.SoundPlayer;
 import de.ar.game.tiles.TileManager;
 
 /**
@@ -40,6 +44,7 @@ public class GamePanel extends JPanel implements CountDownListener {
 	private CountDownManager countDownManager;
 	private GameControl gameControl;
 	private KeyHandler keyHandler;
+	private SoundPlayer soundPlayer;
 
 	private JFrame window;
 
@@ -70,6 +75,13 @@ public class GamePanel extends JPanel implements CountDownListener {
 		countdown_level_expired 
 		= countDownManager.getCountDown(CountDownManager.COUNTDOWN_LEVEL_EXPIRED);
 		countdown_level_expired.addListener(this);
+		
+		soundPlayer=new SoundPlayer();
+		try {
+			soundPlayer.open();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
 
 		setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
 		this.setFocusable(true);
@@ -80,6 +92,10 @@ public class GamePanel extends JPanel implements CountDownListener {
 		ball.move();
 		leftPlayer.move();
 		rightPlayer.move();
+	}
+
+	public SoundPlayer getSoundPlayer() {
+		return soundPlayer;
 	}
 
 	@Override

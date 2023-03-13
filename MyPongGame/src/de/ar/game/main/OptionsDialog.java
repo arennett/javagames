@@ -17,6 +17,10 @@ import javax.swing.JRadioButton;
 
 public class OptionsDialog extends JDialog {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private GamePanel gp;
 
 	public OptionsDialog (GamePanel gp) {
