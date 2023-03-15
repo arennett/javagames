@@ -18,8 +18,11 @@ import de.ar.game.countdown.CountDownListener;
 import de.ar.game.countdown.CountDownManager;
 import de.ar.game.entity.Ball;
 import de.ar.game.entity.Player;
+import de.ar.game.gpcontrol.GPManager;
 import de.ar.game.sound.SoundPlayer;
 import de.ar.game.tiles.TileManager;
+import static  de.ar.game.countdown.CountDownManager.*;
+
 
 /**
  * the gamepanel holds all entities and controls and is drawing and updating the
@@ -45,6 +48,7 @@ public class GamePanel extends JPanel implements CountDownListener {
 	private GameControl gameControl;
 	private KeyHandler keyHandler;
 	private SoundPlayer soundPlayer;
+	private GPManager gpManager;
 
 	private JFrame window;
 
@@ -59,6 +63,7 @@ public class GamePanel extends JPanel implements CountDownListener {
 	public GamePanel(JFrame window) {
 		this.window = window;
 		keyHandler = new KeyHandler(this);
+		gpManager = new GPManager();
 		addKeyListener(keyHandler);
 		tileManager = new TileManager();
 		collisionDetection = new CollisionDetection(this);
@@ -182,12 +187,16 @@ public class GamePanel extends JPanel implements CountDownListener {
 	@Override
 	public void updateCount(CountDown cd) {
 		repaint();
+		if (cd.getId()==COUNTDOWN_LEVEL_START) {
+			getSoundPlayer().play(SoundPlayer.CLIP_BALL_BEEP1);
+		}
 		
 	}
 
 	@Override
 	public void expiredCount(CountDown cd) {
-		// TODO Auto-generated method stub
+		
+		
 		
 	}
 }

@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,6 +15,8 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 
 public class OptionsDialog extends JDialog {
 	
@@ -30,6 +33,11 @@ public class OptionsDialog extends JDialog {
 		Container dialogContainer = getContentPane();
 		dialogContainer.setLayout(new BorderLayout());
 		
+		 Font font =new Font("Arial", Font.BOLD, 18);
+		 setFont(font);
+		 
+		 
+		
 		setLayout(new BorderLayout());
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(new FlowLayout());
@@ -39,7 +47,9 @@ public class OptionsDialog extends JDialog {
 		
 		buttonPanel.setLayout(new BorderLayout());
 		JRadioButton button_playmode_1 = new JRadioButton("1 Player");
+		button_playmode_1.setFont(font);
 		JRadioButton button_playmode_2 = new JRadioButton("2 Player");
+		button_playmode_2.setFont(font);
 		buttonPanel.add(button_playmode_1,BorderLayout.NORTH);
 		buttonPanel.add(button_playmode_2,BorderLayout.SOUTH);
 		

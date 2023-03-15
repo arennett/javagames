@@ -2,10 +2,16 @@ package de.ar.game.main;
 
 import static de.ar.game.countdown.CountDownManager.*;
 
+import java.awt.Font;
+
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 
 import de.ar.game.countdown.CountDown;
 import de.ar.game.countdown.CountDownListener;
+import de.ar.game.gpcontrol.GPManager;
+import de.ar.game.sound.SoundPlayer;
 
 /**
  * start and stop the game and opens the OptionsDialig 
@@ -39,6 +45,7 @@ public class GameControl implements Runnable, CountDownListener{
 		
 		countdown_level_start.addListener(this);
 		countdown_level_expired.addListener(this);
+		
 		
 	}
 
@@ -142,12 +149,33 @@ public class GameControl implements Runnable, CountDownListener{
 		switch(cd.getId()) {
 		case COUNTDOWN_LEVEL_EXPIRED:
 			 	stopLevel();
-				JOptionPane.showMessageDialog(gp,"Game over, try again !","MyPong V1.0" ,JOptionPane.PLAIN_MESSAGE);
+			 	for (int i=0; i<4;i++) {
+					gp.getSoundPlayer().play(SoundPlayer.CLIP_BALL_BEEP1);
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			 	 UIManager.put("OptionPane.messageFont", new FontUIResource(new Font(  
+			 	          "Arial", Font.BOLD, 18)));  
+				JOptionPane.showMessageDialog(gp,"    Game over, try again !","MyPong V1.0" ,JOptionPane.PLAIN_MESSAGE);
 				startLevelCountDown();
 			
 			break;
 			
 		case COUNTDOWN_LEVEL_START:
+			for (int i=0; i<4;i++) {
+				gp.getSoundPlayer().play(SoundPlayer.CLIP_BALL_BEEP1);
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
 			startLevel();
 		
 			break;
