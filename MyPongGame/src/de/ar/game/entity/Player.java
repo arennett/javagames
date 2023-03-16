@@ -67,12 +67,16 @@ public class Player extends Entity{
 				
 		dy=0;
 		if (playerType == PLAYER_RIGHT) {
-			if (keyH.isKeyPressed_UP()) {
-				dy=-speed;
-			}
-			
-			if (keyH.isKeyPressed_DOWN()) {
-				dy=speed;
+			if (gp.getGamePadRight()!=null) {
+				dy=gp.getGamePadRight().getScaledValue();
+			}else {
+				if (keyH.isKeyPressed_UP()) {
+					dy=-speed;
+				}
+				
+				if (keyH.isKeyPressed_DOWN()) {
+					dy=speed;
+				}
 			}
 		}
 		if (playerType == PLAYER_LEFT) {

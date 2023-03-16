@@ -41,18 +41,18 @@ public class GPManager {
 		}
 	}
 	
-	GPController getGPController(int id) {
+	public GPController getGPController(int id) {
 		if (id > 0 && id < gpControllers.size()) {
 			return gpControllers.elementAt(id);
 		}
 		return null;
 			
 	} 
-	GPController getFirstController() {
+	public GPController getFirstController() {
 		return gpControllers.elementAt(GP_FIRST_CONTROLLER);
 	}
 	
-	GPController getSecondController() {
+	public GPController getSecondController() {
 		return gpControllers.elementAt(GP_SECOND_CONTROLLER);
 	}
 	

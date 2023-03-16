@@ -103,8 +103,10 @@ public class GPController {
 
 	private void updateListeners(GPValueEvent gpe) {
 		Vector<GPValueListener> listeners =registry.get(gpe.getId());
-		for (GPValueListener listener:listeners) {
-			listener.updateGPValue(gpe);
+		if(listeners != null) {
+			for (GPValueListener listener:listeners) {
+				listener.updateGPValue(gpe);
+			}
 		}
 	}
 

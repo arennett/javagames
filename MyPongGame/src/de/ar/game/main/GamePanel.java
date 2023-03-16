@@ -18,6 +18,7 @@ import de.ar.game.countdown.CountDownListener;
 import de.ar.game.countdown.CountDownManager;
 import de.ar.game.entity.Ball;
 import de.ar.game.entity.Player;
+import de.ar.game.gamepad.GamePad;
 import de.ar.game.gpcontrol.GPManager;
 import de.ar.game.sound.SoundPlayer;
 import de.ar.game.tiles.TileManager;
@@ -49,6 +50,13 @@ public class GamePanel extends JPanel implements CountDownListener {
 	private KeyHandler keyHandler;
 	private SoundPlayer soundPlayer;
 	private GPManager gpManager;
+	private GamePad gamePadRight;
+	private GamePad gamePadLeft;
+	
+
+	public GPManager getGpManager() {
+		return gpManager;
+	}
 
 	private JFrame window;
 
@@ -73,7 +81,13 @@ public class GamePanel extends JPanel implements CountDownListener {
 		ball = new Ball(this);
 		leftPlayer = new Player(Player.PLAYER_LEFT, this);
 		rightPlayer = new Player(Player.PLAYER_RIGHT, this);
-		
+		if(gpManager.countControllers()>0) {
+			gamePadRight = new GamePad(20, gpManager.getFirstController());
+		}
+		if(gpManager.countControllers()>1) {
+			gamePadRight = new GamePad(20, gpManager.getSecondController());
+		}
+				
 		countdown_level_start = countDownManager.getCountDown(CountDownManager.COUNTDOWN_LEVEL_START);
 		countdown_level_start.addListener(this);
 		
@@ -91,6 +105,22 @@ public class GamePanel extends JPanel implements CountDownListener {
 		setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
 		this.setFocusable(true);
 		this.requestFocusInWindow();
+	}
+
+	public GamePad getGamePadRight() {
+		return gamePadRight;
+	}
+
+	public void setGamePadRight(GamePad gamePadRight) {
+		this.gamePadRight = gamePadRight;
+	}
+
+	public GamePad getGamePadLeft() {
+		return gamePadLeft;
+	}
+
+	public void setGamePadLeft(GamePad gamePadLeft) {
+		this.gamePadLeft = gamePadLeft;
 	}
 
 	public void update() {
