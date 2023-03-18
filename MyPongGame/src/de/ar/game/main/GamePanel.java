@@ -71,8 +71,15 @@ public class GamePanel extends JPanel implements CountDownListener {
 	public GamePanel(JFrame window) {
 		this.window = window;
 		keyHandler = new KeyHandler(this);
-		gpManager = new GPManager();
 		addKeyListener(keyHandler);
+		gpManager = new GPManager();
+		if(gpManager.countControllers()>0) {
+			gamePadRight = new GamePad(20, gpManager.getFirstController());
+		}
+		if(gpManager.countControllers()>1) {
+			gamePadLeft = new GamePad(20, gpManager.getSecondController());
+		}
+		
 		tileManager = new TileManager();
 		collisionDetection = new CollisionDetection(this);
 		scoreControl = new ScoreControl(this);
@@ -81,12 +88,7 @@ public class GamePanel extends JPanel implements CountDownListener {
 		ball = new Ball(this);
 		leftPlayer = new Player(Player.PLAYER_LEFT, this);
 		rightPlayer = new Player(Player.PLAYER_RIGHT, this);
-		if(gpManager.countControllers()>0) {
-			gamePadRight = new GamePad(20, gpManager.getFirstController());
-		}
-		if(gpManager.countControllers()>1) {
-			gamePadRight = new GamePad(20, gpManager.getSecondController());
-		}
+		
 				
 		countdown_level_start = countDownManager.getCountDown(CountDownManager.COUNTDOWN_LEVEL_START);
 		countdown_level_start.addListener(this);

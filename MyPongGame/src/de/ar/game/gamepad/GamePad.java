@@ -19,6 +19,10 @@ public class GamePad implements GPValueListener {
 		
 	}
 	
+	public GPController getGpController() {
+		return gpController;
+	}
+
 	public void startInputThread() {
 		t =new Thread() {
 			public void run(){

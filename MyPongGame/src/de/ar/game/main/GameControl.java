@@ -3,20 +3,25 @@ package de.ar.game.main;
 import static de.ar.game.countdown.CountDownManager.*;
 
 import java.awt.Font;
+import java.awt.Window;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
 import de.ar.game.countdown.CountDown;
 import de.ar.game.countdown.CountDownListener;
 import de.ar.game.gpcontrol.GPManager;
+import de.ar.game.gpcontrol.GPValueEvent;
+import de.ar.game.gpcontrol.GPValueListener;
 import de.ar.game.sound.SoundPlayer;
 
 /**
  * start and stop the game and opens the OptionsDialig 
  */
-public class GameControl implements Runnable, CountDownListener{
+public class GameControl implements Runnable, CountDownListener, GPValueListener{
 	final int  FPS = 60;
 	final long FPERIOD_NSEC = 1000 * 1000 * 1000 / FPS; 
 	public static final int PLAY_MODE_RESERVED	 = 0;
@@ -28,6 +33,7 @@ public class GameControl implements Runnable, CountDownListener{
 	Thread gameThread;
 	private boolean gameThreadRunning =false;
 	private int playMode=PLAY_MODE_ONE_PLAYER;
+	JLabel gameoverLabel=null;
 	
 	CountDown countdown_level_start;
 	CountDown countdown_level_expired;
@@ -46,7 +52,13 @@ public class GameControl implements Runnable, CountDownListener{
 		countdown_level_start.addListener(this);
 		countdown_level_expired.addListener(this);
 		
+		if (gp.getGamePadRight()!=null) {
+			gp.getGamePadRight().getGpController().addListener(this, GPValueEvent.ID_VALUE_BUTTON_A);
+		}
 		
+		gameoverLabel = new JLabel("Game over, try again !");
+		Font f=new Font( "Arial", Font.BOLD, 18);  
+	 	gameoverLabel.setFont(f);
 	}
 
 	public void startLevelCountDown() {
@@ -158,9 +170,27 @@ public class GameControl implements Runnable, CountDownListener{
 						e.printStackTrace();
 					}
 				}
-			 	 UIManager.put("OptionPane.messageFont", new FontUIResource(new Font(  
-			 	          "Arial", Font.BOLD, 18)));  
-				JOptionPane.showMessageDialog(gp,"    Game over, try again !","MyPong V1.0" ,JOptionPane.PLAIN_MESSAGE);
+//			 	 UIManager.put("OptionPane.messageFont", new FontUIResource(new Font(  
+//			 	          "Arial", Font.BOLD, 18)));  
+//			 	
+			    if (gp.getScoreControl().scPlayerLeft > gp.getScoreControl().scPlayerRight) {
+			    	if (playMode==PLAY_MODE_ONE_PLAYER) {
+			    		gameoverLabel.setText("time over, computer wins !");
+			    	}else {
+			    		gameoverLabel.setText("time over, left player wins !");
+			    	}
+			    	
+			    }else  if (gp.getScoreControl().scPlayerLeft < gp.getScoreControl().scPlayerRight){
+			    	if (playMode==PLAY_MODE_ONE_PLAYER) {
+			    		gameoverLabel.setText("time over, you win !");
+			    	}else {
+			    		gameoverLabel.setText("time over, right player wins !");
+			    	}
+			    }else {
+			    	gameoverLabel.setText("time over, nobody wins !");
+			    }
+				JOptionPane.showMessageDialog(gp,gameoverLabel,"MyPong V1.0" ,JOptionPane.PLAIN_MESSAGE);
+				
 				startLevelCountDown();
 			
 			break;
@@ -181,6 +211,21 @@ public class GameControl implements Runnable, CountDownListener{
 			break;
 		}
 		
+		
+	}
+
+	@Override
+	public void updateGPValue(GPValueEvent event) {
+		if (event.getId()==GPValueEvent.ID_VALUE_BUTTON_A) {
+			Window win=SwingUtilities.getWindowAncestor(gameoverLabel);
+			if(win!=null) {
+				win.setVisible(false);
+			}
+			if (optDialog.isVisible()) {
+				optDialog.setVisible(false);
+				gp.getGameControl().startLevelCountDown();
+			}
+		}
 		
 	}
 
